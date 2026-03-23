@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.paths.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "declaration": false, // <-- turn off .d.ts generation
+    "declarationMap": false, // <-- turn off declaration maps
+    "esModuleInterop": true,
+    "outDir": "./build",
+    "strict": true,
+    "target": "ES2021",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["**/*"],
+  "exclude": ["node_modules", "build", "bootstrap/ssr"]
+}
