@@ -3,13 +3,51 @@ import { ResumeTemplate } from "@/Components/resume/templates/resume-template";
 import { TemplatePicker } from "@/Components/resume/preview/template-picker";
 import { ExportMenu } from "@/Components/resume/preview/export-menu";
 import { ScrollArea } from "@/Components/ui/scroll-area";
-import { ZoomIn, ZoomOut } from "lucide-react";
-import { useState } from "react";
+import { Button } from "@/Components/ui/button";
+import { ZoomIn, ZoomOut, Save, Check, Loader2 } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 export function ResumePreview() {
-  const { data } = useResume();
+  const { data, saveNow } = useResume();
   const [zoom, setZoom] = useState(0.75);
+  const [saveFeedback, setSaveFeedback] = useState<"idle" | "saved" | "error">("idle");
+  const [saveSaving, setSaveSaving] = useState(false);
+  const [saveErrorDetail, setSaveErrorDetail] = useState<string | null>(null);
+  const saveFeedbackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (saveFeedbackTimer.current) clearTimeout(saveFeedbackTimer.current);
+    };
+  }, []);
+
+  const handleSave = () => {
+    setSaveErrorDetail(null);
+    setSaveSaving(true);
+    void (async () => {
+      try {
+        const result = await saveNow();
+        if (result.ok) {
+          setSaveFeedback("saved");
+          setSaveErrorDetail(null);
+        } else {
+          setSaveFeedback("error");
+          setSaveErrorDetail(result.error);
+        }
+      } catch {
+        setSaveFeedback("error");
+        setSaveErrorDetail("Network error while saving.");
+      } finally {
+        setSaveSaving(false);
+        if (saveFeedbackTimer.current) clearTimeout(saveFeedbackTimer.current);
+        saveFeedbackTimer.current = setTimeout(() => {
+          setSaveFeedback("idle");
+          setSaveErrorDetail(null);
+        }, 4000);
+      }
+    })();
+  };
 
   return (
     <div className="bg-muted/40 flex h-full flex-col">
@@ -38,6 +76,37 @@ export function ResumePreview() {
             </button>
           </div>
           <ExportMenu />
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="h-8 gap-1.5 text-xs"
+            disabled={saveSaving}
+            title={saveErrorDetail ?? undefined}
+            onClick={handleSave}
+          >
+            {saveSaving ? (
+              <>
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                Saving…
+              </>
+            ) : saveFeedback === "saved" ? (
+              <>
+                <Check className="h-3.5 w-3.5" />
+                Saved
+              </>
+            ) : saveFeedback === "error" ? (
+              <>
+                <Save className="h-3.5 w-3.5" />
+                Save failed
+              </>
+            ) : (
+              <>
+                <Save className="h-3.5 w-3.5" />
+                Save
+              </>
+            )}
+          </Button>
         </div>
       </div>
 

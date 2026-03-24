@@ -3,6 +3,7 @@ import type { ResumeData } from "@/lib/resume-types";
 import { formatDateRange, formatDate } from "@/lib/resume-utils";
 import { ResumeDescriptionHtml } from "@/lib/resume-description-html";
 import { PersonalContactPreview } from "@/Components/resume/personal-contact-preview";
+import { ResumeExternalLink } from "@/Components/resume/resume-external-link";
 
 interface Props {
   data: ResumeData;
@@ -123,11 +124,22 @@ export function MinimalTemplate({ data }: Props) {
               <div key={proj.id}>
                 <div className="flex items-baseline justify-between gap-2">
                   <h3 className="text-sm font-semibold text-neutral-900">
-                    {proj.name}
+                    {proj.url?.trim() ? (
+                      <ResumeExternalLink href={proj.url} className="text-neutral-900">
+                        {proj.name?.trim() || proj.url}
+                      </ResumeExternalLink>
+                    ) : (
+                      proj.name
+                    )}
                   </h3>
-                  {proj.url && (
-                    <span className="text-xs text-neutral-400">{proj.url}</span>
-                  )}
+                  {proj.url?.trim() ? (
+                    <ResumeExternalLink
+                      href={proj.url}
+                      className="shrink-0 text-xs text-neutral-400"
+                    >
+                      {proj.url}
+                    </ResumeExternalLink>
+                  ) : null}
                 </div>
                 {proj.technologies && (
                   <p className="mb-0.5 text-xs text-neutral-400">

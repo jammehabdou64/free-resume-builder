@@ -24,7 +24,7 @@ export function ResumeBuilder() {
           </div>
           <div className="flex items-center gap-3">
             <p className="text-muted-foreground hidden text-xs sm:block">
-              Changes saved automatically
+              Draft saved in this browser — Save syncs to your account
             </p>
             <ThemeToggle />
           </div>

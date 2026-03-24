@@ -1,5 +1,6 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { PersonalInfo } from "@/lib/resume-types";
+import { normalizeExternalHref } from "@/lib/external-url";
 import { cn } from "@/lib/utils";
 import { Mail, Phone, MapPin, Globe, Linkedin, Github } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -17,16 +18,40 @@ interface PersonalContactPreviewProps {
 function ContactLine({
   icon: Icon,
   children,
+  href,
   iconClassName,
   textClassName,
   linkStyle,
 }: {
   icon: LucideIcon;
   children: string;
+  /** When set, opens in a new browser tab */
+  href?: string | null;
   iconClassName?: string;
   textClassName?: string;
   linkStyle?: CSSProperties;
 }) {
+  const text: ReactNode = href ? (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn(
+        "min-w-0 break-all text-xs leading-snug underline-offset-2 hover:underline",
+        textClassName,
+      )}
+      style={linkStyle}
+    >
+      {children}
+    </a>
+  ) : (
+    <span
+      className={cn("min-w-0 break-all text-xs leading-snug", textClassName)}
+      style={linkStyle}
+    >
+      {children}
+    </span>
+  );
   return (
     <div className="flex min-w-0 max-w-full items-center gap-2">
       <Icon
@@ -34,12 +59,7 @@ function ContactLine({
         strokeWidth={2}
         aria-hidden
       />
-      <span
-        className={cn("min-w-0 break-all text-xs leading-snug", textClassName)}
-        style={linkStyle}
-      >
-        {children}
-      </span>
+      {text}
     </div>
   );
 }
@@ -78,6 +98,7 @@ export function PersonalContactPreview({
           <ContactLine
             key={`${item.value}-${i}`}
             icon={item.icon}
+            href={item.link ? normalizeExternalHref(item.value) : null}
             iconClassName="text-white/85"
             textClassName="text-white/75"
           >
@@ -107,6 +128,7 @@ export function PersonalContactPreview({
               <ContactLine
                 key={`${item.value}-${i}`}
                 icon={item.icon}
+                href={item.link ? normalizeExternalHref(item.value) : null}
                 iconClassName="text-neutral-500"
                 textClassName={item.link ? "text-neutral-300" : "text-neutral-400"}
                 linkStyle={item.link ? { color: accent } : undefined}
@@ -145,6 +167,7 @@ export function PersonalContactPreview({
               <ContactLine
                 key={`${item.value}-${i}`}
                 icon={item.icon}
+                href={item.link ? normalizeExternalHref(item.value) : null}
                 iconClassName="text-white"
                 textClassName="text-white/90"
               >
@@ -177,6 +200,7 @@ export function PersonalContactPreview({
             <ContactLine
               key={`${item.value}-${i}`}
               icon={item.icon}
+              href={item.link ? normalizeExternalHref(item.value) : null}
               iconClassName="text-neutral-900"
               textClassName="text-neutral-700"
             >

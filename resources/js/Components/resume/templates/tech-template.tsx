@@ -3,6 +3,7 @@ import type { ResumeData } from "@/lib/resume-types";
 import { formatDateRange, formatDate } from "@/lib/resume-utils";
 import { ResumeDescriptionHtml } from "@/lib/resume-description-html";
 import { PersonalContactPreview } from "@/Components/resume/personal-contact-preview";
+import { ResumeExternalLink } from "@/Components/resume/resume-external-link";
 
 interface Props {
   data: ResumeData;
@@ -150,10 +151,27 @@ export function TechTemplate({ data }: Props) {
                   style={{ borderColor: accent, backgroundColor: "#111" }}
                 />
                 <div className="flex items-baseline justify-between gap-2">
-                  <h3 className="text-sm font-bold text-neutral-100">{proj.name}</h3>
-                  {proj.url && (
-                    <span className="font-mono text-xs text-neutral-500">{proj.url}</span>
-                  )}
+                  <h3 className="text-sm font-bold text-neutral-100">
+                    {proj.url?.trim() ? (
+                      <ResumeExternalLink
+                        href={proj.url}
+                        className="font-bold"
+                        style={{ color: accent }}
+                      >
+                        {proj.name?.trim() || proj.url}
+                      </ResumeExternalLink>
+                    ) : (
+                      proj.name
+                    )}
+                  </h3>
+                  {proj.url?.trim() ? (
+                    <ResumeExternalLink
+                      href={proj.url}
+                      className="shrink-0 font-mono text-xs text-neutral-500"
+                    >
+                      {proj.url}
+                    </ResumeExternalLink>
+                  ) : null}
                 </div>
                 {proj.technologies && (
                   <div className="my-1 flex flex-wrap gap-1">

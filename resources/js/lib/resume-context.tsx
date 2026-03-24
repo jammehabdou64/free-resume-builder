@@ -18,8 +18,12 @@ import type {
   TemplateId,
 } from "@/lib/resume-types";
 import { DEMO_DATA, DEFAULT_SECTIONS } from "@/lib/resume-types";
-
-const STORAGE_KEY = "resume_builder_data";
+import {
+  RESUME_STORAGE_KEY,
+  RESUME_REMOTE_ID_KEY,
+  syncResumeFromLocalStorage,
+  type ResumeSaveResult,
+} from "@/lib/resume-sync";
 
 const emptyResumeData: ResumeData = {
   selectedTemplate: "minimal",
@@ -72,6 +76,8 @@ interface ResumeContextType {
   reorderSections: (sections: ResumeSection[]) => void;
   loadDemoData: () => void;
   clearData: () => void;
+  /** Flush to localStorage, then sync that payload to the server (POST or PUT). */
+  saveNow: () => Promise<ResumeSaveResult>;
 }
 
 const ResumeContext = createContext<ResumeContextType | null>(null);
@@ -84,7 +90,7 @@ export function ResumeProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState<ResumeData>(() => {
     if (typeof window !== "undefined") {
       try {
-        const stored = localStorage.getItem(STORAGE_KEY);
+        const stored = localStorage.getItem(RESUME_STORAGE_KEY);
         if (stored) return JSON.parse(stored) as ResumeData;
       } catch {
         /* ignore */
@@ -95,7 +101,7 @@ export function ResumeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      localStorage.setItem(RESUME_STORAGE_KEY, JSON.stringify(data));
     } catch {
       /* ignore */
     }
@@ -329,8 +335,17 @@ export function ResumeProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const clearData = useCallback(() => {
+    try {
+      localStorage.removeItem(RESUME_REMOTE_ID_KEY);
+    } catch {
+      /* ignore */
+    }
     setData(emptyResumeData);
   }, []);
+
+  const saveNow = useCallback((): Promise<ResumeSaveResult> => {
+    return syncResumeFromLocalStorage(data);
+  }, [data]);
 
   return (
     <ResumeContext.Provider
@@ -361,6 +376,7 @@ export function ResumeProvider({ children }: { children: React.ReactNode }) {
         reorderSections,
         loadDemoData,
         clearData,
+        saveNow,
       }}
     >
       {children}

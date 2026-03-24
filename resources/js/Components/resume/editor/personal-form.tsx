@@ -1,9 +1,15 @@
-import { useCallback, type ComponentType, type ReactNode } from "react";
+import {
+  useCallback,
+  useState,
+  type ComponentType,
+  type ReactNode,
+} from "react";
 import { useResume } from "@/lib/resume-context";
 import { Input } from "@/Components/ui/input";
 import { Textarea } from "@/Components/ui/textarea";
 import { Label } from "@/Components/ui/label";
 import { Button } from "@/Components/ui/button";
+import { PhotoCropDialog } from "@/Components/resume/editor/photo-crop-dialog";
 import {
   User,
   Upload,
@@ -19,6 +25,8 @@ import {
   FileText,
 } from "lucide-react";
 
+const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
+
 function FieldLabel({
   htmlFor,
   icon: Icon,
@@ -30,7 +38,10 @@ function FieldLabel({
 }) {
   return (
     <Label htmlFor={htmlFor} className="flex items-center gap-1.5">
-      <Icon className="text-muted-foreground h-3.5 w-3.5 shrink-0" aria-hidden />
+      <Icon
+        className="text-muted-foreground h-3.5 w-3.5 shrink-0"
+        aria-hidden
+      />
       {children}
     </Label>
   );
@@ -39,22 +50,47 @@ function FieldLabel({
 export function PersonalForm() {
   const { data, updatePersonal } = useResume();
   const { personal } = data;
+  const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
 
   const handlePhotoUpload = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
+      const input = e.target;
+      const file = input.files?.[0];
+      input.value = "";
+      setPhotoError(null);
       if (!file) return;
+      if (!file.type.startsWith("image/")) {
+        setPhotoError("Please choose an image file.");
+        return;
+      }
+      if (file.size > MAX_PHOTO_BYTES) {
+        setPhotoError("Image must be 10MB or smaller.");
+        return;
+      }
       const reader = new FileReader();
       reader.onload = (ev) => {
-        updatePersonal({ photo: ev.target?.result as string });
+        const result = ev.target?.result;
+        if (typeof result === "string") setCropImageSrc(result);
       };
       reader.readAsDataURL(file);
     },
-    [updatePersonal],
+    [],
   );
 
   return (
     <div className="space-y-4">
+      <PhotoCropDialog
+        open={cropImageSrc !== null}
+        imageSrc={cropImageSrc ?? ""}
+        onOpenChange={(open) => {
+          if (!open) setCropImageSrc(null);
+        }}
+        onApply={(croppedDataUrl) => {
+          updatePersonal({ photo: croppedDataUrl });
+          setCropImageSrc(null);
+        }}
+      />
       <div className="flex items-center gap-4">
         <div className="relative shrink-0">
           {personal.photo ? (
@@ -95,7 +131,14 @@ export function PersonalForm() {
             className="sr-only"
             onChange={handlePhotoUpload}
           />
-          <p className="text-muted-foreground mt-1 text-xs">JPG, PNG up to 5MB</p>
+          <p className="text-muted-foreground mt-1 text-xs">
+            JPG, PNG up to 10MB — crop compresses the photo for your resume
+          </p>
+          {photoError ? (
+            <p className="text-destructive mt-1 text-xs" role="alert">
+              {photoError}
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -199,7 +242,7 @@ export function PersonalForm() {
           placeholder="Brief overview of your professional background and goals..."
           value={personal.summary}
           onChange={(e) => updatePersonal({ summary: e.target.value })}
-          rows={4}
+          rows={10}
           className="resize-none"
         />
       </div>
