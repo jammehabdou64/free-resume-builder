@@ -11,14 +11,13 @@ export class AuthRequest extends FormRequest {
     await this.validate({
       //
       name: ["required"],
-      email: ["required", "unique:users"],
+      email: ["required", "unique:users,email"],
       password: ["required", "min:6", "same:confirmPassword"],
       confirmPassword: ["same:password"],
     });
   }
 
   async save() {
-    await this.rules();
     return User.create({
       name: this.input("name"),
       email: this.input("email"),

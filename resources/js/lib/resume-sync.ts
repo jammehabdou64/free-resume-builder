@@ -1,11 +1,10 @@
+import { router } from "@inertiajs/react";
 import type { ResumeData } from "@/lib/resume-types";
 
 export const RESUME_STORAGE_KEY = "resume_builder_data";
 export const RESUME_REMOTE_ID_KEY = "resume_builder_remote_id";
 
-export type ResumeSaveResult =
-  | { ok: true }
-  | { ok: false; error: string };
+export type ResumeSaveResult = { ok: true } | { ok: false; error: string };
 
 function resumeLabel(data: ResumeData): string | undefined {
   const name = data.personal?.name?.trim();
@@ -13,25 +12,9 @@ function resumeLabel(data: ResumeData): string | undefined {
   return undefined;
 }
 
-async function parseErrorMessage(res: Response): Promise<string> {
-  try {
-    const j = (await res.json()) as { message?: string; max?: number };
-    if (typeof j.message === "string") {
-      if (res.status === 403 && typeof j.max === "number") {
-        return `${j.message} (max ${j.max})`;
-      }
-      return j.message;
-    }
-  } catch {
-    /* ignore */
-  }
-  if (res.status === 401) return "Sign in to save your resume to the server.";
-  return `Save failed (${res.status})`;
-}
-
 /**
- * Reads the latest resume JSON from localStorage and upserts it via `/api/resumes`.
- * Uses cookie auth (`credentials: "include"`).
+ * Flush draft to localStorage, then sync that JSON via an Inertia POST to `/resume/sync`
+ * (session cookie auth, same as other Inertia forms).
  */
 export async function syncResumeFromLocalStorage(
   dataOverride: ResumeData,
@@ -54,53 +37,60 @@ export async function syncResumeFromLocalStorage(
     return { ok: false, error: "Stored resume data is invalid." };
   }
 
-  const body = {
-    data: payload as unknown as Record<string, unknown>,
-    label: resumeLabel(payload),
-  };
+  const resumeId = localStorage.getItem(RESUME_REMOTE_ID_KEY) ?? "";
 
-  let remoteId = localStorage.getItem(RESUME_REMOTE_ID_KEY);
-
-  if (remoteId) {
-    const res = await fetch(`/api/resumes/${encodeURIComponent(remoteId)}`, {
-      method: "PUT",
-      credentials: "include",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify(body),
-    });
-
-    if (res.status === 404) {
-      localStorage.removeItem(RESUME_REMOTE_ID_KEY);
-      remoteId = null;
-    } else if (res.ok) {
-      return { ok: true };
-    } else {
-      return { ok: false, error: await parseErrorMessage(res) };
-    }
-  }
-
-  if (!remoteId) {
-    const res = await fetch("/api/resumes", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify(body),
-    });
-
-    if (res.status === 201) {
-      try {
-        const created = (await res.json()) as { id?: string };
-        if (created.id) {
-          localStorage.setItem(RESUME_REMOTE_ID_KEY, created.id);
-        }
-      } catch {
-        /* ignore */
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (r: ResumeSaveResult) => {
+      if (!settled) {
+        settled = true;
+        resolve(r);
       }
-      return { ok: true };
-    }
+    };
 
-    return { ok: false, error: await parseErrorMessage(res) };
-  }
-
-  return { ok: false, error: "Could not sync resume." };
+    router.post(
+      "/resume/sync",
+      {
+        data: payload,
+        label: resumeLabel(payload) ?? "",
+        resume_id: resumeId,
+      } as unknown as Parameters<typeof router.post>[1],
+      {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: (page) => {
+          if (page.url.includes("/login")) {
+            finish({
+              ok: false,
+              error: "Sign in to save your resume to the server.",
+            });
+            return;
+          }
+          const p = page.props as { resumeRemoteSync?: { id?: string } };
+          if (p.resumeRemoteSync?.id) {
+            localStorage.setItem(RESUME_REMOTE_ID_KEY, p.resumeRemoteSync.id);
+          }
+          finish({ ok: true });
+        },
+        onError: (errors) => {
+          const e = errors as Record<string, string | string[]>;
+          const save = e.save;
+          const msg = Array.isArray(save)
+            ? save[0]
+            : typeof save === "string"
+              ? save
+              : "Save failed";
+          finish({ ok: false, error: String(msg) });
+        },
+        onFinish: () => {
+          if (!settled) {
+            finish({
+              ok: false,
+              error: "Save could not complete. Sign in and try again.",
+            });
+          }
+        },
+      },
+    );
+  });
 }
