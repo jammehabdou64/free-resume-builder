@@ -1,4 +1,5 @@
 import { AuthController } from "@Controllers/AuthController";
+import { ResumeController } from "@Controllers/ResumeController";
 import { ResumeSyncController } from "@Controllers/ResumeSyncController";
 import { Route } from "jcc-express-mvc/Core";
 
@@ -18,6 +19,14 @@ Route.prefix("/resume")
   .group((Route) => {
     Route.get("/sync", "index");
     Route.post("/sync", "sync");
+  });
+
+Route.prefix("/resume")
+  .middleware(["auth"])
+  .controller(ResumeController)
+  .group((Route) => {
+    Route.get("/", "index");
+    Route.get("/preview/{id}", "show");
   });
 
 Route.prefix("/auth").group((Route) => {

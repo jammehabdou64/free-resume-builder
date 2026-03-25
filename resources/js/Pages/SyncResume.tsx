@@ -9,22 +9,20 @@ const SyncResumeComponent = () => {
   useEffect(() => {
     const saveResume = async () => {
       try {
-        setLoading(true);
-        // const result = await saveNow();
-        // console.log(result);
-        if (false) {
-          //   router.visit("/resume");
-          console.log("Saved");
-          console.log({ data });
+        const result = await saveNow();
+        console.log(result);
+        if (result.ok) {
+          return router.visit(`/resume/preview/${result.id}`);
         }
       } catch (error) {
+        console.log(error);
       } finally {
         setLoading(false);
       }
     };
     setTimeout(() => {
       saveResume();
-    }, 60000);
+    }, 6000);
   }, []);
 
   return (

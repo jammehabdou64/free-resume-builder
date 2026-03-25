@@ -1,6 +1,6 @@
 import { httpContext } from "jcc-express-mvc";
 import { Inject, Method } from "jcc-express-mvc/Core/Dependency";
-
+import { Resume } from "@/Model/Resume";
 @Inject()
 export class ResumeController {
   /**
@@ -33,7 +33,9 @@ export class ResumeController {
    *@param {id} - string
    * @return Express Request Response
    */
-  async show({ req, res, next } = httpContext) {
+  @Method()
+  async show(resume: Resume) {
+    return inertia("Resume", { auth });
     //
   }
 

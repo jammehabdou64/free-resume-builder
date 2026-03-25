@@ -14,7 +14,7 @@ import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 
 import { useForm } from "@inertiajs/react";
-import Header from "../../Components/Header";
+import Header from "@/Components/Header";
 
 const Login = () => {
   const { data, errors, setData, processing, post } = useForm({

@@ -232,17 +232,14 @@ export function ResumeProvider({ children }: { children: React.ReactNode }) {
     }));
   }, []);
 
-  const updateProject = useCallback(
-    (id: string, updates: Partial<Project>) => {
-      setData((prev) => ({
-        ...prev,
-        projects: prev.projects.map((p) =>
-          p.id === id ? { ...p, ...updates } : p,
-        ),
-      }));
-    },
-    [],
-  );
+  const updateProject = useCallback((id: string, updates: Partial<Project>) => {
+    setData((prev) => ({
+      ...prev,
+      projects: prev.projects.map((p) =>
+        p.id === id ? { ...p, ...updates } : p,
+      ),
+    }));
+  }, []);
 
   const removeProject = useCallback((id: string) => {
     setData((prev) => ({
