@@ -1,14 +1,15 @@
 import { httpContext } from "jcc-express-mvc";
-import { Inject, Method } from "jcc-express-mvc/Core/Dependency";
 import { Resume, MAX_RESUMES_PER_USER } from "@/Model/Resume";
 import { isResumeDataBody, userId } from "app/helper";
 
 /**
  * Inertia POST target: saves resume JSON from the builder (same payload as the API).
  */
-@Inject()
 export class ResumeSyncController {
-  @Method()
+  index() {
+    return inertia("SyncResume");
+  }
+
   async sync({ req, res } = httpContext) {
     const uid = userId();
     if (!uid) {
@@ -16,15 +17,18 @@ export class ResumeSyncController {
     }
 
     if (!isResumeDataBody(req.body)) {
-      return res.status(422).json({ errors: { save: "Missing or invalid resume data." } });
+      return res
+        .status(422)
+        .json({ errors: { save: "Missing or invalid resume data." } });
     }
 
     const body = req.body;
     const label =
-      typeof body.label === "string" ? body.label.trim().slice(0, 120) : undefined;
+      typeof body.label === "string"
+        ? body.label.trim().slice(0, 120)
+        : undefined;
     const data = body.data;
-    const rid =
-      typeof body.resume_id === "string" ? body.resume_id.trim() : "";
+    const rid = typeof body.resume_id === "string" ? body.resume_id.trim() : "";
 
     if (rid) {
       const doc = await Resume.findOne({ _id: rid, user: uid });
