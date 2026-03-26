@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { BrandLogo } from "@/Components/brand-logo";
 import { ThemeToggle } from "@/Components/resume/theme-toggle";
 import { Menu, X } from "lucide-react";
@@ -15,6 +15,9 @@ const navLinks = [
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { auth } = usePage().props || {};
+  const isAuthenticated =
+    Object.keys(auth as Record<string, unknown>).length > 0;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -31,7 +34,7 @@ const Header = () => {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium"
+                className="text-base text-muted-foreground hover:text-foreground transition-colors font-medium"
               >
                 {link.label}
               </a>
@@ -41,12 +44,20 @@ const Header = () => {
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-2">
             <ThemeToggle />
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/login">Log in</Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link href="/register">Get started free</Link>
-            </Button>
+            {isAuthenticated ? (
+              <Button variant="ghost" asChild>
+                <Link href="/logout">Log out</Link>
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" asChild>
+                  <Link href="/login">Log in</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/register">Get started free</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile toggle */}

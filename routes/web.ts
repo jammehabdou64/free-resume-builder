@@ -3,8 +3,12 @@ import { ResumeController } from "@Controllers/ResumeController";
 import { ResumeSyncController } from "@Controllers/ResumeSyncController";
 import { resumeLoginDataPreserver } from "app/Http/Middlewares/preLoginDataPreserver";
 import { Route } from "jcc-express-mvc/Core";
+import { getAuth } from "app/helper";
 
-Route.get("/", () => inertia("Index"));
+Route.get("/", async () => {
+  const auth = await getAuth();
+  inertia("Index", { auth });
+});
 
 Route.middleware("auth").get("/resume", () => inertia("Resume"));
 
@@ -12,7 +16,9 @@ Route.middleware("guest").get("/login", () => inertia("Auth/Login"));
 
 Route.middleware("guest").get("/register", () => inertia("Auth/Register"));
 
-Route.middleware(["auth"]).get("/home", () => inertia("Home"));
+Route.middleware(["auth"]).get("/dashboard", [ResumeController, "dashboard"]);
+
+Route.middleware(["auth"]).get("/home", [ResumeController, "dashboard"]);
 
 Route.prefix("/resume")
   .middleware([resumeLoginDataPreserver, "auth"])

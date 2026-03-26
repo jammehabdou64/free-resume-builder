@@ -12,20 +12,17 @@ export class AuthController {
   async register({ next } = httpContext, authRequest: AuthRequest) {
     const save = await authRequest.save();
     return save
-      ? Auth.attempt(next)
+      ? Auth.attempt(next, "/dashboard")
       : response().status(401).json({ message: "Invalid credentials" });
   }
 
   //
 
   async login({ req, next } = httpContext) {
-    return Auth.attempt(next);
+    return Auth.attempt(next, "/dashboard");
   }
 
-  logout({ req, res } = httpContext) {
-    return (Auth as { logout: (r: typeof req, s: typeof res) => unknown }).logout(
-      req,
-      res,
-    );
+  logout() {
+    return Auth.logout();
   }
 }

@@ -1,3 +1,6 @@
+import { checkJwtAccessTokenPayload } from "jcc-express-mvc";
+import { jwtSubjectId } from "jcc-express-mvc/lib/util";
+import { User } from "@/Model/User";
 import mongoose from "mongoose";
 
 export const userId = (): string => {
@@ -20,4 +23,21 @@ export const isResumeDataBody = (
     typeof (body as { data: unknown }).data === "object" &&
     (body as { data: unknown }).data !== null
   );
+};
+
+export const getAuth = async () => {
+  //
+  try {
+    const token = request().cookies.auth_token;
+    if (!token) {
+      return {};
+    }
+    const payload = jwtVerify(token);
+    if (!checkJwtAccessTokenPayload(payload).ok) return {};
+
+    const id = jwtSubjectId(payload);
+    return User.findById(id) || {};
+  } catch (error) {
+    return {};
+  }
 };

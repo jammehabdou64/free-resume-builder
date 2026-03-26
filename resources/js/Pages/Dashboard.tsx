@@ -1,7 +1,8 @@
 import { Head, Link, usePage } from "@inertiajs/react";
 import { BrandLogo } from "@/Components/brand-logo";
-import { Plus } from "lucide-react";
 import { Button } from "@/Components/ui/button";
+import { Plus } from "lucide-react";
+import Header from "@/Components/Header";
 
 type ResumeRow = {
   id: string;
@@ -10,22 +11,22 @@ type ResumeRow = {
   createdAt: string;
 };
 
-export default function Resumes() {
+export default function Dashboard() {
   const { resumes = [] } = usePage().props as unknown as {
     resumes?: ResumeRow[];
   };
 
   return (
     <>
-      <Head title="My resumes" />
+      <Head title="Dashboard" />
+      <Header />
       <div className="bg-background text-foreground min-h-screen">
-        <header className="border-border border-b px-6 py-4">
+        {/* <header className="border-border border-b px-6 py-4">
           <div className="mx-auto flex max-w-3xl items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <Link href="/" className="inline-flex shrink-0">
                 <BrandLogo variant="on-light" className="h-7" />
               </Link>
-              <h1 className="text-lg font-semibold">My resumes</h1>
             </div>
             <div className="flex items-center gap-2">
               <Link href="/resume">
@@ -34,22 +35,25 @@ export default function Resumes() {
                   New resume
                 </Button>
               </Link>
-              <Link href="/dashboard">
-                <Button size="sm" variant="outline">
-                  Dashboard
-                </Button>
-              </Link>
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/logout">Log out</Link>
+              </Button>
             </div>
           </div>
-        </header>
+        </header> */}
+
         <main className="mx-auto max-w-3xl px-6 py-8">
+          <p className="text-muted-foreground mb-6 text-sm">
+            Your saved resumes (newest first).
+          </p>
+
           {resumes.length === 0 ? (
             <p className="text-muted-foreground text-sm">
               No saved resumes yet.{" "}
               <Link href="/resume" className="text-primary underline">
                 Open the builder
               </Link>{" "}
-              and save when you are signed in.
+              and save while signed in.
             </p>
           ) : (
             <ul className="divide-border divide-y rounded-lg border">
@@ -71,6 +75,12 @@ export default function Resumes() {
               ))}
             </ul>
           )}
+
+          <p className="text-muted-foreground mt-8 text-center text-sm">
+            <Link href="/resumes" className="text-primary underline">
+              Full list view
+            </Link>
+          </p>
         </main>
       </div>
     </>

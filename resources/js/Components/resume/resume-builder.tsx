@@ -40,10 +40,10 @@ export function ResumeBuilder({
                 My resumes
               </Link>
               <Link
-                href="/home"
+                href="/dashboard"
                 className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
               >
-                Home
+                Dashboard
               </Link>
             </nav>
             <ThemeToggle />
