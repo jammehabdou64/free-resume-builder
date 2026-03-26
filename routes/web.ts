@@ -4,9 +4,9 @@ import { ResumeSyncController } from "@Controllers/ResumeSyncController";
 import { resumeLoginDataPreserver } from "app/Http/Middlewares/preLoginDataPreserver";
 import { Route } from "jcc-express-mvc/Core";
 
-Route.middleware("guest").get("/", () => inertia("Index"));
+Route.get("/", () => inertia("Index"));
 
-Route.middleware("guest").get("/resume", () => inertia("Resume"));
+Route.middleware("auth").get("/resume", () => inertia("Resume"));
 
 Route.middleware("guest").get("/login", () => inertia("Auth/Login"));
 

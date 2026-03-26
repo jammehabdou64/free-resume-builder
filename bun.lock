@@ -54,7 +54,7 @@
         "html-to-image": "^1.11.13",
         "html2canvas-pro": "^2.0.2",
         "inflection": "^3.0.2",
-        "jcc-express-mvc": "^1.8.10",
+        "jcc-express-mvc": "^1.8.11",
         "jsonwebtoken": "^9.0.3",
         "jspdf": "^4.2.1",
         "knex": "^3.2.6",

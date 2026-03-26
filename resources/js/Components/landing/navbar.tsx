@@ -1,7 +1,10 @@
+"use client";
+
 import { Link } from "@inertiajs/react";
-import { FileText, Menu, Server, X } from "lucide-react";
-import React, { useState } from "react";
-import { Button } from "./ui/button";
+
+import { useState } from "react";
+import { FileText, Menu, X } from "lucide-react";
+import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -11,7 +14,7 @@ const navLinks = [
   { label: "Pricing", href: "#pricing" },
 ];
 
-const Header = () => {
+export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -96,6 +99,4 @@ const Header = () => {
       </div>
     </header>
   );
-};
-
-export default Header;
+}
