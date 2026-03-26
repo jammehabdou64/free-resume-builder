@@ -1,5 +1,7 @@
 import { Link } from "@inertiajs/react";
-import { FileText, Menu, Server, X } from "lucide-react";
+import { BrandLogo } from "@/Components/brand-logo";
+import { ThemeToggle } from "@/Components/resume/theme-toggle";
+import { Menu, X } from "lucide-react";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
@@ -19,13 +21,8 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-              <FileText className="w-4 h-4 text-primary-foreground" />
-            </div>
-            <span className="text-base font-bold text-foreground">
-              ResumeForge
-            </span>
+          <Link href="/" className="flex items-center">
+            <BrandLogo variant="on-light" className="h-8" />
           </Link>
 
           {/* Desktop nav */}
@@ -42,7 +39,8 @@ const Header = () => {
           </nav>
 
           {/* Desktop CTA */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2">
+            <ThemeToggle />
             <Button variant="ghost" size="sm" asChild>
               <Link href="/login">Log in</Link>
             </Button>
@@ -52,17 +50,20 @@ const Header = () => {
           </div>
 
           {/* Mobile toggle */}
-          <button
-            className="md:hidden p-2 text-muted-foreground hover:text-foreground"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
-          </button>
+          <div className="flex items-center gap-1 md:hidden">
+            <ThemeToggle />
+            <button
+              className="p-2 text-muted-foreground hover:text-foreground"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 

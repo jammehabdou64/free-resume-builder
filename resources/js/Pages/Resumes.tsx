@@ -1,5 +1,6 @@
 import { Head, Link, usePage } from "@inertiajs/react";
-import { FileText, Plus } from "lucide-react";
+import { BrandLogo } from "@/Components/brand-logo";
+import { Plus } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 
 type ResumeRow = {
@@ -20,8 +21,10 @@ export default function Resumes() {
       <div className="bg-background text-foreground min-h-screen">
         <header className="border-border border-b px-6 py-4">
           <div className="mx-auto flex max-w-3xl items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <FileText className="text-primary h-6 w-6" />
+            <div className="flex items-center gap-3">
+              <Link href="/" className="inline-flex shrink-0">
+                <BrandLogo variant="on-light" className="h-7" />
+              </Link>
               <h1 className="text-lg font-semibold">My resumes</h1>
             </div>
             <div className="flex items-center gap-2">

@@ -2,7 +2,7 @@ import { EditorSidebar } from "@/Components/resume/editor/editor-sidebar";
 import { ResumePreview } from "@/Components/resume/preview/resume-preview";
 import { ResumeProvider, type ServerLoadedResume } from "@/lib/resume-context";
 import { ThemeToggle } from "@/Components/resume/theme-toggle";
-import { FileText } from "lucide-react";
+import { BrandLogo } from "@/Components/brand-logo";
 import { Link } from "@inertiajs/react";
 
 export function ResumeBuilder({
@@ -14,18 +14,13 @@ export function ResumeBuilder({
     <ResumeProvider initialFromServer={initialFromServer}>
       <div className="bg-background text-foreground flex h-screen flex-col overflow-hidden">
         <header className="border-border bg-card z-10 flex shrink-0 items-center justify-between border-b px-5 py-3">
-          <div className="flex items-center gap-2.5">
-            <div className="bg-primary flex h-7 w-7 items-center justify-center rounded-md">
-              <FileText className="text-primary-foreground h-4 w-4" />
-            </div>
-            <div>
-              <h1 className="text-foreground text-sm leading-none font-bold">
-                ResumeForge
-              </h1>
-              <p className="text-muted-foreground mt-0.5 text-xs leading-none">
-                Professional Resume Builder
-              </p>
-            </div>
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <Link href="/" className="inline-flex max-w-[min(100%,200px)]">
+              <BrandLogo variant="on-light" className="h-7 w-auto max-w-[160px]" />
+            </Link>
+            <p className="text-muted-foreground text-xs leading-none">
+              Professional resume builder
+            </p>
           </div>
           <div className="flex items-center gap-3">
             <p className="text-muted-foreground hidden text-xs sm:block">

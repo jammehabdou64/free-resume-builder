@@ -1,0 +1,28 @@
+<svg width="220" height="48" viewBox="0 0 220 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient -->
+  <defs>
+    <linearGradient id="gradDark" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#60A5FA"/>
+      <stop offset="1" stop-color="#818CF8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Icon Background -->
+  <rect x="0" y="0" width="40" height="40" rx="10" fill="url(#gradDark)"/>
+
+  <!-- Document lines -->
+  <rect x="10" y="10" width="20" height="3" rx="1.5" fill="white" opacity="0.95"/>
+  <rect x="10" y="17" width="16" height="3" rx="1.5" fill="white" opacity="0.85"/>
+  <rect x="10" y="24" width="12" height="3" rx="1.5" fill="white" opacity="0.75"/>
+
+  <!-- Check icon -->
+  <path d="M12 20L16 24L26 14" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Text -->
+  <text x="52" y="26" font-family="Inter, sans-serif" font-size="18" font-weight="600" fill="#F9FAFB">
+    JCC
+  </text>
+  <text x="95" y="26" font-family="Inter, sans-serif" font-size="18" font-weight="500" fill="#CBD5F5">
+    Resume
+  </text>
+</svg>

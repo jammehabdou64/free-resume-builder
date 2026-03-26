@@ -4,7 +4,8 @@ import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import { Avatar, AvatarFallback } from "@/Components/ui/avatar";
-import { Eye, EyeOff, FileText, Github, LogIn } from "lucide-react";
+import { BrandLogo } from "@/Components/brand-logo";
+import { Eye, EyeOff, Github, LogIn } from "lucide-react";
 
 function GoogleMark({ className }: { className?: string }) {
   return (
@@ -51,16 +52,13 @@ const Login = () => {
       <Head title="Log in — ResumeForge" />
       <div className="bg-background flex min-h-screen flex-col lg:flex-row">
         {/* Left: brand + social proof — hidden on small screens */}
-        <aside className="relative hidden w-full flex-col justify-between bg-linear-to-br from-[hsl(222_47%_18%)] to-[hsl(217_58%_30%)] px-10 py-12 text-white lg:flex lg:w-1/2 lg:px-14 lg:py-16">
+        <aside className="from-auth-panel-from to-auth-panel-to relative hidden w-full flex-col justify-between bg-linear-to-br px-10 py-12 text-white lg:flex lg:w-1/2 lg:px-14 lg:py-16">
           <div>
             <Link
               href="/"
-              className="inline-flex items-center gap-2.5 opacity-95 transition-opacity hover:opacity-100"
+              className="inline-flex opacity-95 transition-opacity hover:opacity-100"
             >
-              <span className="bg-white/15 flex h-9 w-9 items-center justify-center rounded-lg">
-                <FileText className="h-5 w-5 text-white" />
-              </span>
-              <span className="text-lg font-semibold tracking-tight">ResumeForge</span>
+              <BrandLogo variant="on-dark" className="h-9 sm:h-10" />
             </Link>
           </div>
 
@@ -110,14 +108,8 @@ const Login = () => {
         <div className="flex w-full flex-1 flex-col justify-center px-6 py-12 sm:px-10 lg:w-1/2 lg:px-16 xl:px-24">
           <div className="mx-auto w-full max-w-[400px]">
             <div className="mb-8 lg:hidden">
-              <Link
-                href="/"
-                className="text-foreground inline-flex items-center gap-2.5 font-semibold tracking-tight"
-              >
-                <span className="bg-primary/10 flex h-9 w-9 items-center justify-center rounded-lg">
-                  <FileText className="text-primary h-5 w-5" />
-                </span>
-                ResumeForge
+              <Link href="/" className="inline-flex">
+                <BrandLogo variant="on-light" className="h-8" />
               </Link>
             </div>
             <div className="mb-10 space-y-2">
@@ -190,7 +182,7 @@ const Login = () => {
                   </Label>
                   <Link
                     href="/auth/forgot-password"
-                    className="text-primary text-sm font-medium hover:underline"
+                    className="text-auth-brand text-sm font-medium hover:underline"
                   >
                     Forgot password?
                   </Link>
@@ -224,7 +216,7 @@ const Login = () => {
               <Button
                 type="submit"
                 disabled={processing}
-                className="h-11 w-full gap-2 bg-[hsl(217_91%_45%)] text-base font-semibold text-white shadow-md hover:bg-[hsl(217_91%_40%)]"
+                className="bg-auth-brand hover:bg-auth-brand-hover h-11 w-full gap-2 text-base font-semibold text-white shadow-md"
               >
                 <LogIn className="h-4 w-4" />
                 {processing ? "Signing in…" : "Sign in"}
@@ -233,7 +225,7 @@ const Login = () => {
 
             <p className="text-muted-foreground mt-10 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <Link href="/register" className="text-primary font-semibold hover:underline">
+              <Link href="/register" className="text-auth-brand font-semibold hover:underline">
                 Create one free
               </Link>
             </p>

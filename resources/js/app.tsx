@@ -2,6 +2,8 @@ import "../css/app.css";
 import { createRoot } from "react-dom/client";
 import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
+import { ThemeInit } from "./theme-init";
+
 const appName = import.meta.env.VITE_APP_NAME || "JCC";
 
 createInertiaApp({
@@ -13,7 +15,12 @@ createInertiaApp({
     ),
   setup({ el, App, props }) {
     const root = createRoot(el);
-    root.render(<App {...props} />);
+    root.render(
+      <>
+        <ThemeInit />
+        <App {...props} />
+      </>,
+    );
   },
   progress: {
     color: "#172554",

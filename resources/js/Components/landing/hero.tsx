@@ -59,7 +59,7 @@ export function Hero() {
             className="h-12 px-8 text-base gap-2 font-semibold shadow-md"
             asChild
           >
-            <Link href="/builder">
+            <Link href="/resume">
               Build your resume free
               <ArrowRight className="w-4 h-4" />
             </Link>

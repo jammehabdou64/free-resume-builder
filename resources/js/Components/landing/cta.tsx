@@ -21,7 +21,7 @@ export function CTA() {
               className="h-12 px-8 text-base font-semibold gap-2"
               asChild
             >
-              <Link href="/builder">
+              <Link href="/resume">
                 Build your resume now
                 <ArrowRight className="w-4 h-4" />
               </Link>

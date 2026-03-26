@@ -1,5 +1,5 @@
 import { Link } from "@inertiajs/react";
-import { FileText } from "lucide-react";
+import { BrandLogo } from "@/Components/brand-logo";
 
 const footerLinks = {
   Product: [
@@ -29,13 +29,8 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           {/* Brand */}
           <div className="flex flex-col gap-4">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-                <FileText className="w-4 h-4 text-primary-foreground" />
-              </div>
-              <span className="text-base font-bold text-foreground">
-                ResumeForge
-              </span>
+            <Link href="/" className="flex items-center">
+              <BrandLogo variant="on-light" className="h-8" />
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
               The free, professional resume builder trusted by 50,000+ job
@@ -68,7 +63,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-border">
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} ResumeForge. All rights reserved.
+            &copy; {new Date().getFullYear()} JCC Resume. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <Link

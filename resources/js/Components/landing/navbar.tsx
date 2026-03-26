@@ -3,7 +3,8 @@
 import { Link } from "@inertiajs/react";
 
 import { useState } from "react";
-import { FileText, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { BrandLogo } from "@/Components/brand-logo";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
@@ -22,13 +23,8 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-              <FileText className="w-4 h-4 text-primary-foreground" />
-            </div>
-            <span className="text-base font-bold text-foreground">
-              ResumeForge
-            </span>
+          <Link href="/" className="flex items-center">
+            <BrandLogo variant="on-light" className="h-8 sm:h-9" />
           </Link>
 
           {/* Desktop nav */}
