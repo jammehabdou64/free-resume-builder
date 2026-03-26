@@ -1,12 +1,17 @@
 import { EditorSidebar } from "@/Components/resume/editor/editor-sidebar";
 import { ResumePreview } from "@/Components/resume/preview/resume-preview";
-import { ResumeProvider } from "@/lib/resume-context";
+import { ResumeProvider, type ServerLoadedResume } from "@/lib/resume-context";
 import { ThemeToggle } from "@/Components/resume/theme-toggle";
 import { FileText } from "lucide-react";
+import { Link } from "@inertiajs/react";
 
-export function ResumeBuilder() {
+export function ResumeBuilder({
+  initialFromServer = null,
+}: {
+  initialFromServer?: ServerLoadedResume | null;
+}) {
   return (
-    <ResumeProvider>
+    <ResumeProvider initialFromServer={initialFromServer}>
       <div className="bg-background text-foreground flex h-screen flex-col overflow-hidden">
         <header className="border-border bg-card z-10 flex shrink-0 items-center justify-between border-b px-5 py-3">
           <div className="flex items-center gap-2.5">
@@ -26,6 +31,26 @@ export function ResumeBuilder() {
             <p className="text-muted-foreground hidden text-xs sm:block">
               Draft saved in this browser — Save syncs to your account
             </p>
+            <nav className="flex items-center gap-2 text-xs">
+              <Link
+                href="/resume"
+                className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+              >
+                New draft
+              </Link>
+              <Link
+                href="/resumes"
+                className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+              >
+                My resumes
+              </Link>
+              <Link
+                href="/home"
+                className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+              >
+                Home
+              </Link>
+            </nav>
             <ThemeToggle />
           </div>
         </header>

@@ -1,13 +1,13 @@
-import { httpContext, type Request } from "jcc-express-mvc";
+import { httpContext } from "jcc-express-mvc";
 import { Inject, Method } from "jcc-express-mvc/Core/Dependency";
-import mongoose from "mongoose";
 import { Resume, MAX_RESUMES_PER_USER } from "@/Model/Resume";
 import { isResumeDataBody, userId } from "app/helper";
+import { resumeDataWithStoredPhoto } from "app/resume-photo";
 
 @Inject()
 export class ResumeController {
   /** List current user's resumes (metadata only). */
-
+  @Method()
   async index() {
     const uid = userId();
     if (!uid) return response().status(401).json({ message: "Unauthorized" });
@@ -58,11 +58,21 @@ export class ResumeController {
       typeof req.body.label === "string"
         ? req.body.label.trim().slice(0, 120)
         : undefined;
+    let data: Record<string, unknown>;
+    try {
+      data = await resumeDataWithStoredPhoto(
+        req.body.data as Record<string, unknown>,
+        uid,
+      );
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Invalid profile photo.";
+      return res.status(422).json({ message: msg });
+    }
     try {
       const created = await Resume.create({
         user: uid,
         label: label || "Untitled resume",
-        data: req.body.data,
+        data,
       });
       return res.status(201).json({
         id: created._id.toString(),
@@ -95,7 +105,17 @@ export class ResumeController {
         : undefined;
     const doc = await Resume.findOne({ _id: req.params.id, user: uid });
     if (!doc) return res.status(404).json({ message: "Resume not found" });
-    doc.data = req.body.data;
+    let data: Record<string, unknown>;
+    try {
+      data = await resumeDataWithStoredPhoto(
+        req.body.data as Record<string, unknown>,
+        uid,
+      );
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Invalid profile photo.";
+      return res.status(422).json({ message: msg });
+    }
+    doc.data = data;
     if (label !== undefined) doc.label = label;
     await doc.save();
     return res.json({

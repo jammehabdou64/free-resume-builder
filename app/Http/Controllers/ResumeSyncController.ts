@@ -1,13 +1,49 @@
 import { httpContext } from "jcc-express-mvc";
 import { Resume, MAX_RESUMES_PER_USER } from "@/Model/Resume";
 import { isResumeDataBody, userId } from "app/helper";
+import { resumeDataWithStoredPhoto } from "app/resume-photo";
+
+async function forgetResumeLoginData(): Promise<void> {
+  const sess = session();
+  if (sess == null) return;
+  sess.forget("resumeLoginData");
+  await sess.save();
+}
 
 /**
  * Inertia POST target: saves resume JSON from the builder (same payload as the API).
  */
 export class ResumeSyncController {
-  index() {
-    return inertia("SyncResume");
+  async index() {
+    const sess = session();
+    if (sess == null) {
+      return inertia("SyncResume", {
+        pendingResumeLoginData: null,
+      });
+    }
+    const pending = sess.get("resumeLoginData") as unknown;
+    await forgetResumeLoginData();
+    return inertia("SyncResume", {
+      pendingResumeLoginData: pending ?? null,
+    });
+  }
+
+  /** Multipart upload for profile photo after crop (field `photo`). */
+  async uploadPhoto({ req, res } = httpContext) {
+    const uid = userId();
+    if (!uid) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    if (!req.hasFile("photo")) {
+      return res.status(422).json({ message: "No photo uploaded." });
+    }
+    const folder = `uploads/resume-photos/${uid}`;
+    const fileName = req.file("photo").store(folder);
+    if (!fileName) {
+      return res.status(500).json({ message: "Could not save image." });
+    }
+    const url = `/${folder}/${fileName}`;
+    return res.json({ url });
   }
 
   async sync({ req, res } = httpContext) {
@@ -27,7 +63,17 @@ export class ResumeSyncController {
       typeof body.label === "string"
         ? body.label.trim().slice(0, 120)
         : undefined;
-    const data = body.data;
+    let data: Record<string, unknown>;
+    try {
+      data = await resumeDataWithStoredPhoto(
+        body.data as Record<string, unknown>,
+        uid,
+      );
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Invalid profile photo.";
+      return res.status(422).json({ errors: { save: msg } });
+    }
+
     const rid = typeof body.resume_id === "string" ? body.resume_id.trim() : "";
 
     if (rid) {
@@ -36,9 +82,8 @@ export class ResumeSyncController {
         doc.data = data;
         if (label !== undefined) doc.label = label;
         await doc.save();
-        return res.inertia("Resume", {
-          resumeRemoteSync: { id: doc._id.toString() },
-        });
+        await forgetResumeLoginData();
+        return res.redirect(303, `/resume/preview/${doc._id.toString()}`);
       }
     }
 
@@ -48,9 +93,8 @@ export class ResumeSyncController {
         label: label || "Untitled resume",
         data,
       });
-      return res.inertia("Resume", {
-        resumeRemoteSync: { id: created._id.toString() },
-      });
+      await forgetResumeLoginData();
+      return res.redirect(303, `/resume/preview/${created._id.toString()}`);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Could not save resume";
       if (msg.includes("at most")) {

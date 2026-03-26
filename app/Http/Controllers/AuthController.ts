@@ -22,7 +22,10 @@ export class AuthController {
     return Auth.attempt(next);
   }
 
-  async logout() {
-    return Auth.logout(request(), response());
+  logout({ req, res } = httpContext) {
+    return (Auth as { logout: (r: typeof req, s: typeof res) => unknown }).logout(
+      req,
+      res,
+    );
   }
 }

@@ -5,7 +5,9 @@ import { Button } from "@/Components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Head, Link, usePage } from "@inertiajs/react";
 const Home = () => {
-  const auth: Record<string, any> = usePage().props;
+  const { auth } = usePage().props as {
+    auth?: { name?: string; email?: string } | null;
+  };
   return (
     <>
       <Head title="Home" />
@@ -16,7 +18,13 @@ const Home = () => {
             <div className="p-4 border-b">
               <h2 className="text-xl font-bold">Dashboard</h2>
             </div>
-            <div className="p-4 absolute bottom-0 border-t ">
+            <div className="p-4 absolute bottom-0 border-t flex flex-col gap-2">
+              <Link href="/resumes" className="text-sm hover:underline">
+                My resumes
+              </Link>
+              <Link href="/resume" className="text-sm hover:underline">
+                Resume builder
+              </Link>
               <Link href="/logout">Logout</Link>
             </div>
           </aside>

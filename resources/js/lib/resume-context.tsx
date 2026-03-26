@@ -25,6 +25,13 @@ import {
   type ResumeSaveResult,
 } from "@/lib/resume-sync";
 
+/** Server-loaded document for `/resume/preview/:id`. */
+export type ServerLoadedResume = {
+  id: string;
+  label?: string;
+  data: ResumeData;
+};
+
 const emptyResumeData: ResumeData = {
   selectedTemplate: "minimal",
   accentColor: "#2563eb",
@@ -86,18 +93,33 @@ function generateId() {
   return Math.random().toString(36).slice(2, 9);
 }
 
-export function ResumeProvider({ children }: { children: React.ReactNode }) {
-  const [data, setData] = useState<ResumeData>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = localStorage.getItem(RESUME_STORAGE_KEY);
-        if (stored) return JSON.parse(stored) as ResumeData;
-      } catch {
-        /* ignore */
-      }
+function readInitialResumeData(
+  initialFromServer: ServerLoadedResume | null | undefined,
+): ResumeData {
+  if (initialFromServer?.data) {
+    return initialFromServer.data;
+  }
+  if (typeof window !== "undefined") {
+    try {
+      const stored = localStorage.getItem(RESUME_STORAGE_KEY);
+      if (stored) return JSON.parse(stored) as ResumeData;
+    } catch {
+      /* ignore */
     }
-    return emptyResumeData;
-  });
+  }
+  return emptyResumeData;
+}
+
+export function ResumeProvider({
+  children,
+  initialFromServer = null,
+}: {
+  children: React.ReactNode;
+  initialFromServer?: ServerLoadedResume | null;
+}) {
+  const [data, setData] = useState<ResumeData>(() =>
+    readInitialResumeData(initialFromServer),
+  );
 
   useEffect(() => {
     try {
@@ -106,6 +128,16 @@ export function ResumeProvider({ children }: { children: React.ReactNode }) {
       /* ignore */
     }
   }, [data]);
+
+  useEffect(() => {
+    if (initialFromServer?.id) {
+      try {
+        localStorage.setItem(RESUME_REMOTE_ID_KEY, initialFromServer.id);
+      } catch {
+        /* ignore */
+      }
+    }
+  }, [initialFromServer?.id]);
 
   const updatePersonal = useCallback((personal: Partial<PersonalInfo>) => {
     setData((prev) => ({
@@ -340,8 +372,12 @@ export function ResumeProvider({ children }: { children: React.ReactNode }) {
     setData(emptyResumeData);
   }, []);
 
-  const saveNow = useCallback((): Promise<ResumeSaveResult> => {
-    return syncResumeFromLocalStorage(data);
+  const saveNow = useCallback(async (): Promise<ResumeSaveResult> => {
+    const result = await syncResumeFromLocalStorage(data);
+    if (result.ok && result.data) {
+      setData(result.data);
+    }
+    return result;
   }, [data]);
 
   return (

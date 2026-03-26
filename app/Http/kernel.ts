@@ -1,6 +1,6 @@
 import { auth, guest } from "jcc-express-mvc";
 import { inertia } from "jcc-express-mvc/Core/Inertia";
-
+import { resumeLoginDataPreserver } from "app/Http/Middlewares/preLoginDataPreserver";
 export class Kernel {
   //
 
@@ -12,5 +12,6 @@ export class Kernel {
   public middlewareAliases = {
     auth,
     guest,
+    resumeLoginDataPreserver,
   };
 }

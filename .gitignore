@@ -16,6 +16,9 @@
 # misc
 .env
 
+# Runtime user uploads (resume photos, etc.)
+/public/uploads
+
 
 npm-debug.log*
 yarn-debug.log*
