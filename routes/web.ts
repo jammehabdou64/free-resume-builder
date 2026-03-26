@@ -26,7 +26,7 @@ Route.prefix("/resume")
   .controller(ResumeController)
   .group((Route) => {
     Route.get("/", "index");
-    Route.get("/preview/{id}", "show");
+    Route.get("/preview/{resume}", "show");
   });
 
 Route.prefix("/auth").group((Route) => {

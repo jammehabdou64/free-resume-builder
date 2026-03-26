@@ -35,7 +35,8 @@ export class ResumeController {
    */
   @Method()
   async show(resume: Resume) {
-    return inertia("Resume", { auth });
+    return resume;
+    // return inertia("Resume", { auth });
     //
   }
 
