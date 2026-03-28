@@ -42,6 +42,14 @@ const Login = () => {
     setData({ ...data, [target.name]: target.value });
   };
 
+  const googleLogin = () => {
+    window.location.href = "/auth/google";
+  };
+
+  const githubLogin = () => {
+    window.location.href = "/auth/github";
+  };
+
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     post("/auth/login");
@@ -84,7 +92,9 @@ const Login = () => {
 
           <div className="grid grid-cols-3 gap-6 border-t border-white/20 pt-10 text-center">
             <div>
-              <p className="text-2xl font-bold tracking-tight md:text-3xl">50K+</p>
+              <p className="text-2xl font-bold tracking-tight md:text-3xl">
+                50K+
+              </p>
               <p className="mt-1 text-xs font-medium uppercase tracking-wider text-white/65">
                 Resumes built
               </p>
@@ -96,7 +106,9 @@ const Login = () => {
               </p>
             </div>
             <div>
-              <p className="text-2xl font-bold tracking-tight md:text-3xl">Free</p>
+              <p className="text-2xl font-bold tracking-tight md:text-3xl">
+                Free
+              </p>
               <p className="mt-1 text-xs font-medium uppercase tracking-wider text-white/65">
                 Forever
               </p>
@@ -126,6 +138,7 @@ const Login = () => {
                 type="button"
                 variant="outline"
                 className="border-border text-foreground hover:bg-muted/50 h-11 w-full gap-2.5 font-medium shadow-sm"
+                onClick={googleLogin}
               >
                 <GoogleMark className="h-5 w-5 shrink-0" />
                 Continue with Google
@@ -134,6 +147,7 @@ const Login = () => {
                 type="button"
                 variant="outline"
                 className="border-border text-foreground hover:bg-muted/50 h-11 w-full gap-2.5 font-medium shadow-sm"
+                onClick={githubLogin}
               >
                 <Github className="h-5 w-5 shrink-0" />
                 Continue with GitHub
@@ -153,7 +167,10 @@ const Login = () => {
 
             <form onSubmit={submit} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-foreground text-sm font-medium">
+                <Label
+                  htmlFor="email"
+                  className="text-foreground text-sm font-medium"
+                >
                   Email address
                 </Label>
                 <Input
@@ -202,7 +219,9 @@ const Login = () => {
                     type="button"
                     className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2 -translate-y-1/2 rounded p-1.5 transition-colors"
                     onClick={() => setShowPassword((v) => !v)}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -225,7 +244,10 @@ const Login = () => {
 
             <p className="text-muted-foreground mt-10 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <Link href="/register" className="text-auth-brand font-semibold hover:underline">
+              <Link
+                href="/register"
+                className="text-auth-brand font-semibold hover:underline"
+              >
                 Create one free
               </Link>
             </p>

@@ -15,8 +15,8 @@ const app = Application.configuration()
       prefix: "",
     },
   ])
-  .withProviders(providers)
   .withConfig(config)
+  .withProviders(providers)
   .withKernel(Kernel)
   .withMiddleware()
   .create();

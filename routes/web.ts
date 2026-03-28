@@ -50,3 +50,9 @@ Route.prefix("/auth").group((Route) => {
 });
 
 Route.middleware(["auth"]).get("/logout", [AuthController, "logout"]);
+
+Route.get("/auth/google", [AuthController, "google"]);
+Route.get("/auth/google/callback", [AuthController, "googleCallback"]);
+
+Route.get("/auth/github", [AuthController, "github"]);
+Route.get("/auth/github/callback", [AuthController, "githubCallback"]);
