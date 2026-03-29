@@ -25,6 +25,12 @@ async function resumeRowsForUser(uid: string): Promise<ResumeRow[]> {
 }
 
 export class ResumeController {
+  /** New blank resume in the builder. */
+  @Method()
+  create() {
+    return inertia("Resume");
+  }
+
   /** Authenticated list of saved resumes (Inertia). */
   @Method()
   async index() {

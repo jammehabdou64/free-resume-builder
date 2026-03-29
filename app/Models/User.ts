@@ -8,6 +8,9 @@ const UserSchema = new mongoose.Schema(
     password: { type: String, required: true, select: false },
     google_id: { type: String, required: false },
     github_id: { type: String, required: false },
+    facebook_id: { type: String, required: false },
+    gitlab_id: { type: String, required: false },
+    twitter_id: { type: String, required: false },
   },
   { timestamps: true },
 );

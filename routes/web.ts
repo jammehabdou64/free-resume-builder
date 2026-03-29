@@ -41,6 +41,7 @@ Route.prefix("/resume")
   .middleware(["auth"])
   .controller(ResumeController)
   .group((Route) => {
+    Route.get("/create", "create");
     Route.get("/preview/{resume}", "show");
   });
 
@@ -56,3 +57,12 @@ Route.get("/auth/google/callback", [AuthController, "googleCallback"]);
 
 Route.get("/auth/github", [AuthController, "github"]);
 Route.get("/auth/github/callback", [AuthController, "githubCallback"]);
+
+Route.get("/auth/facebook", [AuthController, "facebook"]);
+Route.get("/auth/facebook/callback", [AuthController, "facebookCallback"]);
+
+Route.get("/auth/gitlab", [AuthController, "gitlab"]);
+Route.get("/auth/gitlab/callback", [AuthController, "gitlabCallback"]);
+
+Route.get("/auth/twitter", [AuthController, "twitter"]);
+Route.get("/auth/twitter/callback", [AuthController, "twitterCallback"]);

@@ -45,9 +45,13 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-2">
             <ThemeToggle />
             {isAuthenticated ? (
-              <Button variant="ghost" asChild>
-                <Link href="/logout">Log out</Link>
-              </Button>
+              <>
+                <Link href="/dashboard">Dashboard</Link>
+                <Link href="/resume/create">Create Resume</Link>
+                <Button variant="ghost" asChild>
+                  <Link href="/logout">Log out</Link>
+                </Button>
+              </>
             ) : (
               <>
                 <Button variant="ghost" asChild>
