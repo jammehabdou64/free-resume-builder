@@ -27,7 +27,7 @@ export function Footer() {
     <footer className="border-t border-border bg-muted/20 py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Bottom bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-border">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 ">
           <p className="text-sm text-muted-foreground">
             &copy; {new Date().getFullYear()} JCC Resume. All rights reserved.
           </p>

@@ -4,9 +4,9 @@ import { Button } from "../ui/button";
 
 export function CTA() {
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8">
+    <section className=" bg-primary  px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto text-center">
-        <div className="bg-primary rounded-3xl px-8 py-16 flex flex-col items-center gap-6">
+        <div className=" px-8 py-16 flex flex-col items-center gap-6">
           <h2 className="text-3xl sm:text-4xl font-bold text-primary-foreground text-balance leading-tight">
             Your next job starts with a great resume
           </h2>

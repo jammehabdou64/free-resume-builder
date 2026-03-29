@@ -57,8 +57,8 @@ function navItemClassMobile(active: boolean) {
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [hash, setHash] = useState(
-    () => (typeof window !== "undefined" ? window.location.hash : ""),
+  const [hash, setHash] = useState(() =>
+    typeof window !== "undefined" ? window.location.hash : "",
   );
   const page = usePage();
   const { url, props } = page;
@@ -81,15 +81,14 @@ const Header = () => {
     onIndexPage && href.startsWith("#") && hash === href;
 
   const loginActive = path === "/login";
-  const registerActive =
-    path === "/register" || path.startsWith("/register/");
+  const registerActive = path === "/register" || path.startsWith("/register/");
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center">
-            <BrandLogo variant="on-light" className="h-8" />
+            <BrandLogo variant="on-light" className="h-8 max-w-[200px]" />
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
@@ -118,9 +117,7 @@ const Header = () => {
                 <Link
                   href="/dashboard"
                   className={navItemClass(isDashboardSection(path))}
-                  aria-current={
-                    isDashboardSection(path) ? "page" : undefined
-                  }
+                  aria-current={isDashboardSection(path) ? "page" : undefined}
                 >
                   Dashboard
                 </Link>
@@ -128,9 +125,7 @@ const Header = () => {
                   <Link
                     href="/resume/create"
                     className={navItemClass(isCreateResumePath(path))}
-                    aria-current={
-                      isCreateResumePath(path) ? "page" : undefined
-                    }
+                    aria-current={isCreateResumePath(path) ? "page" : undefined}
                   >
                     Create Resume
                   </Link>
@@ -203,8 +198,9 @@ const Header = () => {
         <div className="px-4 py-4 flex flex-col gap-3">
           {navLinks.map((link) => {
             const active = hashLinkActive(link.href);
-            const href =
-              onIndexPage ? link.href : `/${link.href}`.replace(/^\/{2,}/, "/");
+            const href = onIndexPage
+              ? link.href
+              : `/${link.href}`.replace(/^\/{2,}/, "/");
             return (
               <Link
                 key={link.href}

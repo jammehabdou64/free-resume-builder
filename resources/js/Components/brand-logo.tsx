@@ -22,6 +22,7 @@ export function BrandLogo({
         alt={alt}
         width={220}
         height={48}
+        style={{ height: "44px" }}
         className={cn(
           "h-8 w-auto shrink-0 object-contain object-left",
           className,

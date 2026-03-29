@@ -26,11 +26,11 @@ export function ResumeBuilder({
         <header className="border-border bg-card z-10 flex shrink-0 items-center justify-between border-b px-5 py-3">
           <div className="flex min-w-0 flex-col gap-0.5">
             <Link href="/" className="inline-flex max-w-[min(100%,200px)]">
-              <BrandLogo variant="on-light" className="h-7 w-auto max-w-[160px]" />
+              <BrandLogo
+                variant="on-light"
+                className="h-7 w-auto max-w-[200px]"
+              />
             </Link>
-            <p className="text-muted-foreground text-xs leading-none">
-              Professional resume builder
-            </p>
           </div>
           <div className="flex items-center gap-3">
             <p className="text-muted-foreground hidden text-xs sm:block">
@@ -52,12 +52,7 @@ export function ResumeBuilder({
                   New draft
                 </span>
               )}
-              <Link
-                href="/resumes"
-                className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-              >
-                My resumes
-              </Link>
+
               <Link
                 href="/dashboard"
                 className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
