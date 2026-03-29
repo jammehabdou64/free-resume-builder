@@ -4,6 +4,7 @@ import React, {
   useState,
   useCallback,
   useEffect,
+  useLayoutEffect,
 } from "react";
 import type {
   ResumeData,
@@ -95,7 +96,11 @@ function generateId() {
 
 function readInitialResumeData(
   initialFromServer: ServerLoadedResume | null | undefined,
+  startFresh: boolean,
 ): ResumeData {
+  if (startFresh) {
+    return emptyResumeData;
+  }
   if (initialFromServer?.data) {
     return initialFromServer.data;
   }
@@ -113,13 +118,25 @@ function readInitialResumeData(
 export function ResumeProvider({
   children,
   initialFromServer = null,
+  startFresh = false,
 }: {
   children: React.ReactNode;
   initialFromServer?: ServerLoadedResume | null;
+  startFresh?: boolean;
 }) {
   const [data, setData] = useState<ResumeData>(() =>
-    readInitialResumeData(initialFromServer),
+    readInitialResumeData(initialFromServer, startFresh),
   );
+
+  useLayoutEffect(() => {
+    if (!startFresh) return;
+    try {
+      localStorage.removeItem(RESUME_REMOTE_ID_KEY);
+      localStorage.setItem(RESUME_STORAGE_KEY, JSON.stringify(emptyResumeData));
+    } catch {
+      /* ignore */
+    }
+  }, [startFresh]);
 
   useEffect(() => {
     try {

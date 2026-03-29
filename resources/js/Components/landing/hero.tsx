@@ -7,17 +7,10 @@ import { Badge } from "../ui/badge";
 
 export function Hero() {
   return (
-    <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-      {/* Subtle grid background */}
+    <section className="relative isolate overflow-hidden px-4 pt-32 pb-20 sm:px-6 lg:px-8">
       <div
-        className="absolute inset-0 -z-10"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, var(--color-border) 1px, transparent 1px), linear-gradient(to bottom, var(--color-border) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          maskImage:
-            "radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%)",
-        }}
+        className="hero-grid-bg pointer-events-none absolute inset-0 -z-10"
+        aria-hidden
       />
 
       <div className="max-w-5xl mx-auto text-center">

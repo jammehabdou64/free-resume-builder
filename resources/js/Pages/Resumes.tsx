@@ -8,11 +8,21 @@ type ResumeRow = {
   label: string;
   updatedAt: string;
   createdAt: string;
+  templateId?: string;
+  accentColor?: string;
+  displayName?: string;
+  displayTitle?: string;
 };
 
 export default function Resumes() {
-  const { resumes = [] } = usePage().props as unknown as {
+  const {
+    resumes = [],
+    maxResumesPerUser = 3,
+    canCreateResume = true,
+  } = usePage().props as unknown as {
     resumes?: ResumeRow[];
+    maxResumesPerUser?: number;
+    canCreateResume?: boolean;
   };
 
   return (
@@ -25,15 +35,32 @@ export default function Resumes() {
               <Link href="/" className="inline-flex shrink-0">
                 <BrandLogo variant="on-light" className="h-7" />
               </Link>
-              <h1 className="text-lg font-semibold">My resumes</h1>
+              <h1 className="text-lg font-semibold">
+                My resumes{" "}
+                <span className="text-muted-foreground font-normal text-sm">
+                  ({resumes.length}/{maxResumesPerUser})
+                </span>
+              </h1>
             </div>
             <div className="flex items-center gap-2">
-              <Link href="/resume">
-                <Button size="sm" variant="default">
+              {canCreateResume ? (
+                <Link href="/resume/create">
+                  <Button size="sm" variant="default">
+                    <Plus className="mr-1 h-4 w-4" />
+                    New resume
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  disabled
+                  title={`You can save up to ${maxResumesPerUser} resumes. Delete one to add another.`}
+                >
                   <Plus className="mr-1 h-4 w-4" />
-                  New resume
+                  Limit reached
                 </Button>
-              </Link>
+              )}
               <Link href="/dashboard">
                 <Button size="sm" variant="outline">
                   Dashboard

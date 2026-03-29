@@ -14,7 +14,7 @@ const plans = [
     href: "/register",
     features: [
       "All 5 professional templates",
-      "Unlimited resumes",
+      "Up to 3 saved resumes",
       "Live preview",
       "PDF & PNG export",
       "ATS-optimized output",

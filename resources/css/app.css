@@ -135,6 +135,36 @@
   }
 }
 
+/* Grid + radial mask for Index / Dashboard heroes (uses :root --border, not @theme-only vars) */
+@layer utilities {
+  .hero-grid-bg {
+    background-color: transparent;
+    background-image:
+      linear-gradient(to right, var(--border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      black 40%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      black 40%,
+      transparent 100%
+    );
+  }
+
+  /* Dashboard hero: same grid, full section height (landing hero keeps radial .hero-grid-bg) */
+  .hero-grid-bg-full {
+    background-color: transparent;
+    background-image:
+      linear-gradient(to right, var(--border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+}
+
 @keyframes accordion-down {
   from {
     height: 0;

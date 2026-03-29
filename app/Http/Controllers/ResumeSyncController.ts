@@ -87,6 +87,15 @@ export class ResumeSyncController {
       }
     }
 
+    const existingCount = await Resume.countDocuments({ user: uid });
+    if (existingCount >= MAX_RESUMES_PER_USER) {
+      return res.status(422).json({
+        errors: {
+          save: `You can save at most ${MAX_RESUMES_PER_USER} resumes. Delete one in your dashboard to add another.`,
+        },
+      });
+    }
+
     try {
       const created = await Resume.create({
         user: uid,

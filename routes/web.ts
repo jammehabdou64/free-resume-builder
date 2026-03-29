@@ -10,7 +10,7 @@ Route.get("/", async () => {
   inertia("Index", { auth });
 });
 
-Route.middleware("auth").get("/resume", () => inertia("Resume"));
+Route.middleware(["auth"]).get("/resume", [ResumeController, "editor"]);
 
 Route.middleware("guest").get("/login", () => inertia("Auth/Login"));
 
@@ -57,12 +57,3 @@ Route.get("/auth/google/callback", [AuthController, "googleCallback"]);
 
 Route.get("/auth/github", [AuthController, "github"]);
 Route.get("/auth/github/callback", [AuthController, "githubCallback"]);
-
-Route.get("/auth/facebook", [AuthController, "facebook"]);
-Route.get("/auth/facebook/callback", [AuthController, "facebookCallback"]);
-
-Route.get("/auth/gitlab", [AuthController, "gitlab"]);
-Route.get("/auth/gitlab/callback", [AuthController, "gitlabCallback"]);
-
-Route.get("/auth/twitter", [AuthController, "twitter"]);
-Route.get("/auth/twitter/callback", [AuthController, "twitterCallback"]);

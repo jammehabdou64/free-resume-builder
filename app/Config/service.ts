@@ -34,36 +34,5 @@ export const service = {
         config.get("GITHUB_REDIRECT_URI", "") ||
         defaultRedirect("/auth/github/callback"),
     },
-    facebook: {
-      client_id: config.get("FACEBOOK_CLIENT_ID", ""),
-      client_secret: config.get("FACEBOOK_CLIENT_SECRET", ""),
-      redirect:
-        config.get("FACEBOOK_REDIRECT_URI", "") ||
-        defaultRedirect("/auth/facebook/callback"),
-    },
-    gitlab: {
-      url: String(
-        config.get("GITLAB_URL", "https://gitlab.com") ?? "https://gitlab.com"
-      ).replace(/\/$/, ""),
-      client_id: config.get("GITLAB_CLIENT_ID", ""),
-      client_secret: config.get("GITLAB_CLIENT_SECRET", ""),
-      redirect:
-        config.get("GITLAB_REDIRECT_URI", "") ||
-        defaultRedirect("/auth/gitlab/callback"),
-    },
-    twitter: {
-      client_id: config.get("TWITTER_CLIENT_ID", ""),
-      client_secret: config.get("TWITTER_CLIENT_SECRET", ""),
-      redirect:
-        config.get("TWITTER_REDIRECT_URI", "") ||
-        defaultRedirect("/auth/twitter/callback"),
-    },
-    slack: {
-      client_id: config.get("SLACK_CLIENT_ID", ""),
-      client_secret: config.get("SLACK_CLIENT_SECRET", ""),
-      redirect:
-        config.get("SLACK_REDIRECT_URI", "") ||
-        defaultRedirect("/auth/slack/callback"),
-    },
   },
 };

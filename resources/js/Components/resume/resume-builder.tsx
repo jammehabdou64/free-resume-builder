@@ -7,11 +7,21 @@ import { Link } from "@inertiajs/react";
 
 export function ResumeBuilder({
   initialFromServer = null,
+  startFresh = false,
+  maxResumesPerUser = 3,
+  canCreateResume = true,
 }: {
   initialFromServer?: ServerLoadedResume | null;
+  /** When true (e.g. `/resume/create`), ignore stored draft/id so save creates a new resume. */
+  startFresh?: boolean;
+  maxResumesPerUser?: number;
+  canCreateResume?: boolean;
 }) {
   return (
-    <ResumeProvider initialFromServer={initialFromServer}>
+    <ResumeProvider
+      initialFromServer={initialFromServer}
+      startFresh={startFresh}
+    >
       <div className="bg-background text-foreground flex h-screen flex-col overflow-hidden">
         <header className="border-border bg-card z-10 flex shrink-0 items-center justify-between border-b px-5 py-3">
           <div className="flex min-w-0 flex-col gap-0.5">
@@ -27,12 +37,21 @@ export function ResumeBuilder({
               Draft saved in this browser — Save syncs to your account
             </p>
             <nav className="flex items-center gap-2 text-xs">
-              <Link
-                href="/resume"
-                className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-              >
-                New draft
-              </Link>
+              {canCreateResume ? (
+                <Link
+                  href="/resume/create"
+                  className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                >
+                  New draft
+                </Link>
+              ) : (
+                <span
+                  className="text-muted-foreground cursor-not-allowed opacity-70"
+                  title={`You can save up to ${maxResumesPerUser} resumes. Delete one from your dashboard to start another.`}
+                >
+                  New draft
+                </span>
+              )}
               <Link
                 href="/resumes"
                 className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"

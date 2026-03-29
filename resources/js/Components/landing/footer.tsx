@@ -26,40 +26,6 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-muted/20 py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-          {/* Brand */}
-          <div className="flex flex-col gap-4">
-            <Link href="/" className="flex items-center">
-              <BrandLogo variant="on-light" className="h-8" />
-            </Link>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              The free, professional resume builder trusted by 50,000+ job
-              seekers worldwide.
-            </p>
-          </div>
-
-          {/* Links */}
-          {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
-              <p className="text-sm font-semibold text-foreground mb-4">
-                {category}
-              </p>
-              <ul className="flex flex-col gap-2.5">
-                {links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-border">
           <p className="text-sm text-muted-foreground">
