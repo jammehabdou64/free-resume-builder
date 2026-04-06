@@ -6,7 +6,7 @@ export class Kernel {
 
   public middlewares = [
     //
-    inertia({ rootView: "index" }),
+    inertia({ rootView: "index", ssr: true }),
   ];
 
   public middlewareAliases = {
