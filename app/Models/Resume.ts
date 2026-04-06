@@ -47,4 +47,5 @@ ResumeSchema.pre("save", async function resumeLimitPreSave() {
 
 export type ResumeDocument = ResumeDoc;
 export type Resume = ResumeDoc;
-export const Resume = mongoose.model("Resume", ResumeSchema);
+export const Resume =
+  mongoose.models.Resume || mongoose.model("Resume", ResumeSchema);
