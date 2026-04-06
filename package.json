@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "server.ts",
   "scripts": {
+    "ssr": "bun ./build/bootstrap/ssr/ssr",
     "start": "bun ./build/server.js",
     "dev": "bun --watch -r tsconfig-paths/register server.ts",
     "watch": "vite",
@@ -67,7 +68,7 @@
     "html-to-image": "^1.11.13",
     "html2canvas-pro": "^2.0.2",
     "inflection": "^3.0.2",
-    "jcc-express-mvc": "^1.8.18",
+    "jcc-express-mvc": "^1.8.19",
     "jsonwebtoken": "^9.0.3",
     "jspdf": "^4.2.1",
     "knex": "^3.2.9",

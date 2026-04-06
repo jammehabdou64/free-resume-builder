@@ -21,10 +21,11 @@ export const database = {
   },
   mongoose: {
     host: config.get("DB_HOST", "127.0.0.1"),
-    port: Number(config.get("DB_PORT", "27017")),
+    port: "", // Number(config.get("DB_PORT", "27017")),
     database: config.get("DB_DATABASE", ""),
     username: config.get("DB_USERNAME", ""),
     password: config.get("DB_PASSWORD", ""),
     options: {},
+    mongoUri: config.get("MONGODB_URI"),
   },
 };
