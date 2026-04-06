@@ -17,5 +17,11 @@
     "jsx": "react-jsx"
   },
   "include": ["**/*"],
-  "exclude": ["node_modules", "build", "bootstrap/ssr"]
+  "exclude": [
+    "node_modules",
+    "build",
+    "bootstrap/ssr",
+    "resources/js/**/*.tsx",
+    "resources/js/**/*.ts"
+  ]
 }

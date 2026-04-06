@@ -4,7 +4,7 @@ import { User } from "@/Model/User";
 import mongoose from "mongoose";
 
 export const userId = (): string => {
-  const u = auth() as { _id?: mongoose.Types.ObjectId; id?: string };
+  const u = auth().user() as { _id?: mongoose.Types.ObjectId; id?: string };
   if (!u) return "";
   return u._id?.toString() ?? String(u.id ?? "");
 };

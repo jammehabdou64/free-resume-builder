@@ -19,7 +19,9 @@ type ResumeDataLike = {
   personal?: { name?: string; title?: string };
 };
 
-function previewFromStoredData(data: unknown): Pick<
+function previewFromStoredData(
+  data: unknown,
+): Pick<
   ResumeRow,
   "templateId" | "accentColor" | "displayName" | "displayTitle"
 > {
@@ -28,8 +30,7 @@ function previewFromStoredData(data: unknown): Pick<
   return {
     templateId:
       typeof d?.selectedTemplate === "string" ? d.selectedTemplate : "minimal",
-    accentColor:
-      typeof d?.accentColor === "string" ? d.accentColor : "#2563eb",
+    accentColor: typeof d?.accentColor === "string" ? d.accentColor : "#2563eb",
     displayName:
       typeof personal?.name === "string" ? personal.name.slice(0, 72) : "",
     displayTitle:
@@ -67,8 +68,13 @@ async function resumeQuota(uid: string) {
   };
 }
 
-function dashboardUserFromSession(): { name?: string; email?: string } | undefined {
-  const u = auth() as { name?: string; email?: string } | null | undefined;
+function dashboardUserFromSession():
+  | { name?: string; email?: string }
+  | undefined {
+  const u = auth().user() as
+    | { name?: string; email?: string }
+    | null
+    | undefined;
   if (!u) return undefined;
   if (typeof u.name !== "string" && typeof u.email !== "string") {
     return undefined;
