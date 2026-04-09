@@ -27,6 +27,12 @@ const CAPTURE_STYLE: Partial<CSSStyleDeclaration> = {
 
 const isViteDev = import.meta.env.DEV;
 
+/** PNG export: sharper on screen; PDF uses lower ratio + JPEG to avoid 10–20MB files. */
+const CAPTURE_PIXEL_RATIO_PNG = 2;
+const CAPTURE_PIXEL_RATIO_PDF = 1.5;
+/** JPEG quality for embedded PDF images (0.8–0.9 keeps text readable, much smaller than PNG). */
+const PDF_JPEG_QUALITY = 0.78;
+
 function triggerDownload(href: string, filename: string): void {
   const a = document.createElement("a");
   a.href = href;
@@ -38,7 +44,10 @@ function triggerDownload(href: string, filename: string): void {
   document.body.removeChild(a);
 }
 
-async function renderWithHtml2CanvasPro(el: HTMLElement): Promise<HTMLCanvasElement> {
+async function renderWithHtml2CanvasPro(
+  el: HTMLElement,
+  scale: number,
+): Promise<HTMLCanvasElement> {
   const prev = {
     transform: el.style.transform,
     marginBottom: el.style.marginBottom,
@@ -49,7 +58,7 @@ async function renderWithHtml2CanvasPro(el: HTMLElement): Promise<HTMLCanvasElem
   el.style.transformOrigin = "top left";
   try {
     return await html2canvas(el, {
-      scale: 2,
+      scale,
       useCORS: true,
       allowTaint: true,
       backgroundColor: "#ffffff",
@@ -62,22 +71,28 @@ async function renderWithHtml2CanvasPro(el: HTMLElement): Promise<HTMLCanvasElem
   }
 }
 
-async function renderResumeToCanvas(el: HTMLElement): Promise<HTMLCanvasElement> {
+async function renderResumeToCanvas(
+  el: HTMLElement,
+  pixelRatio: number,
+): Promise<HTMLCanvasElement> {
   if (!isViteDev) {
     try {
       const { toCanvas } = await import("html-to-image");
       return await toCanvas(el, {
-        pixelRatio: 2,
+        pixelRatio,
         backgroundColor: "#ffffff",
         cacheBust: true,
         style: CAPTURE_STYLE,
       });
     } catch (err) {
-      console.warn("html-to-image failed, falling back to html2canvas-pro:", err);
+      console.warn(
+        "html-to-image failed, falling back to html2canvas-pro:",
+        err,
+      );
     }
   }
 
-  return renderWithHtml2CanvasPro(el);
+  return renderWithHtml2CanvasPro(el, pixelRatio);
 }
 
 export function ExportMenu() {
@@ -98,7 +113,9 @@ export function ExportMenu() {
 
     setExporting(kind);
     try {
-      const canvas = await renderResumeToCanvas(el);
+      const pixelRatio =
+        kind === "pdf" ? CAPTURE_PIXEL_RATIO_PDF : CAPTURE_PIXEL_RATIO_PNG;
+      const canvas = await renderResumeToCanvas(el, pixelRatio);
       const baseName = data.personal.name?.replace(/\s+/g, "_") || "resume";
 
       if (kind === "png") {
@@ -108,7 +125,7 @@ export function ExportMenu() {
       }
 
       const { jsPDF } = await import("jspdf");
-      const imgData = canvas.toDataURL("image/png", 1.0);
+      const imgData = canvas.toDataURL("image/jpeg", PDF_JPEG_QUALITY);
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
@@ -121,7 +138,16 @@ export function ExportMenu() {
       const imgHeight = pdfWidth * imgRatio;
 
       if (imgHeight <= pdfHeight) {
-        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, imgHeight);
+        pdf.addImage(
+          imgData,
+          "JPEG",
+          0,
+          0,
+          pdfWidth,
+          imgHeight,
+          undefined,
+          "FAST",
+        );
       } else {
         /** Source pixels that map to one full PDF page height (width is fitted to pdfWidth). */
         const sliceHeightPx = (pdfHeight / pdfWidth) * canvas.width;
@@ -134,17 +160,29 @@ export function ExportMenu() {
           pageCanvas.height = Math.max(1, drawH);
           const ctx = pageCanvas.getContext("2d");
           if (ctx && drawH > 0) {
-            ctx.drawImage(canvas, 0, srcY, canvas.width, drawH, 0, 0, canvas.width, drawH);
+            ctx.drawImage(
+              canvas,
+              0,
+              srcY,
+              canvas.width,
+              drawH,
+              0,
+              0,
+              canvas.width,
+              drawH,
+            );
           }
           /** Keep slice aspect ratio — never force to full page height or text stretches vertically. */
           const sliceHeightMm = pdfWidth * (drawH / canvas.width);
           pdf.addImage(
-            pageCanvas.toDataURL("image/png"),
-            "PNG",
+            pageCanvas.toDataURL("image/jpeg", PDF_JPEG_QUALITY),
+            "JPEG",
             0,
             0,
             pdfWidth,
             sliceHeightMm,
+            undefined,
+            "FAST",
           );
           srcY += drawH;
         }
