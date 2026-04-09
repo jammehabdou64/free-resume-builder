@@ -1,5 +1,6 @@
 import { ResumeController } from "@Controllers/API/ResumeController";
 import { Route } from "jcc-express-mvc/Core";
+import { User } from "@/Model/User";
 
 Route.get("/", function () {
   return { msg: [] };
@@ -15,3 +16,7 @@ Route.prefix("/resumes")
     Route.put("/{id}", "update");
     Route.delete("/{id}", "destroy");
   });
+
+Route.get("/num-users", async () => {
+  return await User.countDocuments({});
+});
