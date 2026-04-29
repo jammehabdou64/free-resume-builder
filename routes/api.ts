@@ -17,6 +17,6 @@ Route.prefix("/resumes")
     Route.delete("/{id}", "destroy");
   });
 
-Route.get("/abdou-users", async () => {
-  return await User.find().select("name").exec();
-});
+// Route.get("/abdou-users", async () => {
+//   return await User.find().select("name").exec();
+// });
