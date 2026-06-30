@@ -1,8 +1,8 @@
 import { Auth, Socialite } from "jcc-express-mvc";
-import { httpContext } from "jcc-express-mvc";
 import { Method } from "jcc-express-mvc/Core/Dependency";
 import { AuthRequest } from "@/Request/AuthRequest";
 import { User } from "@/Model/User";
+import type { HttpContext } from "jcc-express-mvc/lib/Type/HttpContext";
 
 export class AuthController {
   //
@@ -10,7 +10,7 @@ export class AuthController {
   //
 
   @Method()
-  async register({ next } = httpContext, authRequest: AuthRequest) {
+  async register({ next }: HttpContext, authRequest: AuthRequest) {
     const save = await authRequest.save();
     return save
       ? Auth.attempt(next, "/dashboard")
@@ -19,7 +19,7 @@ export class AuthController {
 
   //
 
-  async login({ req, next } = httpContext) {
+  async login({ req, next }: HttpContext) {
     return Auth.attempt(next, "/dashboard");
   }
 
@@ -44,7 +44,7 @@ export class AuthController {
   github() {
     return Socialite.driver("github").redirect();
   }
-  async githubCallback({ next } = httpContext) {
+  async githubCallback({ next }: HttpContext) {
     const user = (await Socialite.driver("github").user()) as any;
     try {
       const updatedUser = await User.findOneAndUpdate(

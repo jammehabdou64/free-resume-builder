@@ -1,4 +1,4 @@
-import { httpContext } from "jcc-express-mvc";
+import type { HttpContext } from "jcc-express-mvc/lib/Type/HttpContext";
 import { Resume, MAX_RESUMES_PER_USER } from "@/Model/Resume";
 import { isResumeDataBody, userId } from "app/helper";
 import { resumeDataWithStoredPhoto } from "app/resume-photo";
@@ -29,7 +29,7 @@ export class ResumeSyncController {
   }
 
   /** Multipart upload for profile photo after crop (field `photo`). */
-  async uploadPhoto({ req, res } = httpContext) {
+  async uploadPhoto({ req, res }: HttpContext) {
     const uid = userId();
     if (!uid) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -46,7 +46,7 @@ export class ResumeSyncController {
     return res.json({ url });
   }
 
-  async sync({ req, res } = httpContext) {
+  async sync({ req, res }: HttpContext) {
     const uid = userId();
     if (!uid) {
       return res.status(422).json({ errors: { save: "Not authenticated." } });

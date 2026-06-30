@@ -1,4 +1,4 @@
-import { httpContext } from "jcc-express-mvc";
+import type { HttpContext } from "jcc-express-mvc/lib/Type/HttpContext";
 import { Inject, Method } from "jcc-express-mvc/Core/Dependency";
 import { Resume, MAX_RESUMES_PER_USER } from "@/Model/Resume";
 import { isResumeDataBody, userId } from "app/helper";
@@ -29,7 +29,7 @@ export class ResumeController {
 
   /** Full document for editing. */
   @Method()
-  async show({ req, res } = httpContext) {
+  async show({ req, res }: HttpContext) {
     const uid = userId();
     if (!uid) return res.status(401).json({ message: "Unauthorized" });
     const doc = await Resume.findOne({
@@ -46,7 +46,7 @@ export class ResumeController {
   }
 
   @Method()
-  async store({ req, res } = httpContext) {
+  async store({ req, res }: HttpContext) {
     const uid = userId();
     if (!uid) return res.status(401).json({ message: "Unauthorized" });
     if (!isResumeDataBody(req.body)) {
@@ -91,7 +91,7 @@ export class ResumeController {
   }
 
   @Method()
-  async update({ req, res } = httpContext) {
+  async update({ req, res }: HttpContext) {
     const uid = userId();
     if (!uid) return res.status(401).json({ message: "Unauthorized" });
     if (!isResumeDataBody(req.body)) {
