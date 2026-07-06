@@ -61,7 +61,7 @@ const Register = () => {
 
   return (
     <>
-      <Head title="Create account — ResumeForge" />
+      <Head title="Create account — JCC Resume Builder" />
       <div className="bg-background flex min-h-screen flex-col lg:flex-row">
         <aside className="from-auth-panel-from to-auth-panel-to relative hidden w-full flex-col justify-between bg-linear-to-br px-10 py-12 text-white lg:flex lg:w-1/2 lg:px-14 lg:py-16">
           <div>

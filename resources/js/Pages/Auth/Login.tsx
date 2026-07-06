@@ -57,7 +57,7 @@ const Login = () => {
 
   return (
     <>
-      <Head title="Log in — ResumeForge" />
+      <Head title="Log in — JCC Resume Builder" />
       <div className="bg-background flex min-h-screen flex-col lg:flex-row">
         {/* Left: brand + social proof — hidden on small screens */}
         <aside className="from-auth-panel-from to-auth-panel-to relative hidden w-full flex-col justify-between bg-linear-to-br px-10 py-12 text-white lg:flex lg:w-1/2 lg:px-14 lg:py-16">
@@ -73,7 +73,7 @@ const Login = () => {
           <div className="max-w-md space-y-8">
             <blockquote className="text-xl font-medium leading-snug tracking-tight md:text-2xl">
               &ldquo;I landed 4 interviews in the first week after switching to
-              ResumeForge. The templates are stunning.&rdquo;
+              JCC Resume Builder. The templates are stunning.&rdquo;
             </blockquote>
             <div className="flex items-center gap-4">
               <Avatar className="h-12 w-12 border-2 border-white/25">
