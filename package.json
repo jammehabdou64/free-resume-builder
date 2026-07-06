@@ -4,7 +4,7 @@
   "main": "server.ts",
   "scripts": {
     "ssr": "bun ./build/bootstrap/ssr/ssr",
-    "start": "bun ./build/server.js",
+    "start": "bun run ssr & bun ./build/server.js",
     "dev": "bun --watch -r tsconfig-paths/register server.ts",
     "watch": "vite",
     "build": "vite build && vite build --ssr && tsc && bun artisanNode build",
