@@ -21,5 +21,6 @@ UserSchema.virtual("resumes", {
 UserSchema.set("toJSON", { virtuals: true });
 UserSchema.set("toObject", { virtuals: true });
 
-export const User = mongoose.model("User", UserSchema);
+export const User =
+  mongoose.models.User || mongoose.model("User", UserSchema);
 export type UserDocument = HydratedDocument<InferSchemaType<typeof UserSchema>>;
